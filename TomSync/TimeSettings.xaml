@@ -1,0 +1,75 @@
+﻿<Window x:Class="TomSync.TimeSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys ="clr-namespace:System;assembly=mscorlib"
+        xmlns:controls ="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:local="clr-namespace:TomSync"
+        mc:Ignorable="d"
+        Style="{StaticResource CustomWindowChrome}"
+        Title="Настройки" Height="200" Width="500"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition Width="303*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <CheckBox Name="IsEnabled_CheckBox" Grid.Row="0" Grid.ColumnSpan="2" 
+                  Checked="IsEnabled_CheckBox_Checked"
+                  Unchecked="IsEnabled_CheckBox_Unchecked">Включить планировщик</CheckBox>
+        <StackPanel Name="TimerSettings" Grid.Row="1" IsEnabled="False" Grid.ColumnSpan="2">
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">Время запуска задачи:</TextBlock>
+                <DatePicker Name ="startDatePicker" DisplayDateStart="{x:Static sys:DateTime.Now}" Margin="0,0,5,0"></DatePicker>
+                <controls:TimePicker Name ="startTimePicker" Width="100"></controls:TimePicker>
+            </StackPanel>
+            <GroupBox Header="Как часто запускать задачу?" Width="Auto">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Name="container" Grid.Column="0" Margin="5">
+                        <RadioButton Name="Once" GroupName="TimerType" IsChecked="True">Один раз</RadioButton>
+                        <RadioButton Name="EveryDay" GroupName="TimerType">Каждый день</RadioButton>
+                        <RadioButton Name="Custom" GroupName="TimerType" Checked="Custom_Checked" Unchecked="Custom_Unchecked">Произвольный период</RadioButton>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Height="20" Margin="5"
+                                Visibility="Hidden"
+                                Name="TimerPeriodPicker">
+                        <TextBlock Margin="0,0,5,0">Дни:</TextBlock>
+                        <controls:IntegerUpDown Name="Days" Minimum="0" Margin="0,0,5,0" Height="20" VerticalAlignment="Bottom"></controls:IntegerUpDown>
+                        <TextBlock Margin="0,0,5,0">Часы:</TextBlock>
+                        <controls:IntegerUpDown Name="Hours" Minimum="0" Maximum="24" Margin="0,0,5,0"></controls:IntegerUpDown>
+                        <TextBlock Margin="0,0,5,0">Минуты:</TextBlock>
+                        <controls:IntegerUpDown Name="Minutes" Minimum="0" Maximum="60"></controls:IntegerUpDown>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal" Grid.ColumnSpan="2">
+            <TextBlock Text="Максимальное количество версий файлов:" Margin="0,0,5,0"/>
+            <TextBox Name="BackupCount_TextBox" 
+                     Width="50" 
+                     PreviewTextInput="NumberValidationTextBox"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+            <Button Style="{StaticResource CustomButton}"
+                    Name="OkTimer_Button"
+                    Click="OkTimer_Button_Click"
+                    Content="OK"/>
+            <Button Style="{StaticResource CustomButton}"
+                    Name="CancelTimer_Button"
+                    Click="CancelTimer_Button_Click"
+                    Content="Отмена"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,104 @@
+﻿<Window x:Class="TomSync.CreateTaskDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TomSync"
+        mc:Ignorable="d"
+        Style="{StaticResource CustomWindowChrome}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Список папок и файлов на компьютере для синхронизации:" 
+                   Grid.Row="0"/>
+        <ListBox Name="LocalPaths_ListBox" 
+                 SelectionMode="Multiple"
+                 Grid.Row="1"/>
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal">
+            <Button Style="{StaticResource CustomButton}"
+                    Name="AddFile_Button" 
+                    Click="AddFile_Button_Click"
+                    Content="Добавить файл" />
+            <Button Style="{StaticResource CustomButton}"
+                    Name="AddDir_Button" 
+                    Click="AddDir_Button_Click"
+                    Content="Добавить папку" />
+            <Button Style="{StaticResource CustomButton}"
+                    Name="DeletePath_Button" 
+                    Click="DeletePath_Button_Click"
+                    Content="Удалить" />
+        </StackPanel>
+        <StackPanel Grid.Row="3" 
+                    Orientation="Horizontal">
+            <TextBlock Text="Папка на сервере для синхронизации: " 
+                   Margin="0,5,0,0"/>
+            <TextBlock Name="SelectedDirName_TexBlock"
+                   Margin="0,5,0,0"/>
+        </StackPanel>
+        <TextBlock Name="DirName_TextBlock" 
+                   Text="DirName" 
+                   Grid.Row="4"/>
+        <ListView Name="ServerItem_ListView" 
+                  SelectionMode="Single"
+                  Grid.Row="5" SelectionChanged="ServerItem_ListView_SelectionChanged" >
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="Имя" 
+                                        DisplayMemberBinding="{Binding Path=Name}"/>
+                        <GridViewColumn Header="Размер" 
+                                        DisplayMemberBinding="{Binding Path=Size, StringFormat={}{0} B}" 
+                                        Width="auto"/>
+                        <GridViewColumn Header="Изменен" 
+                                        DisplayMemberBinding="{Binding Path=LastModified, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}"  
+                                        Width="auto"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="6" 
+                    Orientation="Horizontal">
+            <Button Style="{StaticResource CustomButton}"
+                    Name="OpenButton" 
+                    Click="OpenButton_Click"
+                    Content="Открыть"/>
+            <Button Style="{StaticResource CustomButton}"
+                    Name="BackButton" 
+                    Click="BackButton_Click"
+                    Content="Назад"/>
+            <Button Style="{StaticResource CustomButton}"
+                    Name="SelectCurrentButton" 
+                    Click="SelectCurrentButton_Click"
+                    Content="Выбрать текущую папку"/>
+        </StackPanel>
+        <StackPanel Grid.Row="7" 
+                    Orientation="Horizontal"
+                    Margin="10,5,10,5">
+            <!--<TextBlock Text="Макс. количество копий: " />
+            <TextBox Name="BackupCount_TextBox" 
+                     Width="50" 
+                     PreviewTextInput="NumberValidationTextBox"/>-->
+            <Button Style="{StaticResource CustomButton}"
+                    Name="AddParameters_Button" 
+                    Click="AddParameters_Button_Click"
+                    Content="Дополнительные параметры" />
+        </StackPanel>
+        <StackPanel Grid.Row="8" 
+                    Orientation="Horizontal">
+            <Button Style="{StaticResource CustomButton}"
+                    Name="CreateSyncTask_Button" 
+                    Click="CreateSyncTask_Button_Click"
+                    Content="Сохранить задачу" />
+        </StackPanel>
+    </Grid>
+</Window>

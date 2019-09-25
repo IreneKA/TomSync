@@ -1,0 +1,31 @@
+﻿<Application x:Class="TomSync.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:tb="http://www.hardcodet.net/taskbar"
+             xmlns:local="clr-namespace:TomSync"
+             StartupUri="Login.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomWindowStyle.xaml" />
+                <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                                    xmlns:tb="http://www.hardcodet.net/taskbar">
+                    <tb:TaskbarIcon x:Key="NotifyIcon"
+                                    IconSource="pack://application:,,,/Resources/icon.ico"
+                                    Visibility="Visible"
+                                    ToolTipText="TomSync" 
+                                    TrayLeftMouseDown="TaskbarIcon_TrayLeftMouseDown">
+                        <tb:TaskbarIcon.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Выход" Name="Logout_MenuItem" Click="Logout_MenuItem_Click"/>
+                                <MenuItem Header="Закрыть" Name="Close_MenuItem" Click="Close_MenuItem_Click"/>
+                            </ContextMenu>
+                        </tb:TaskbarIcon.ContextMenu>
+                    </tb:TaskbarIcon>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

@@ -1,0 +1,274 @@
+﻿<Window x:Class="TomSync.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls ="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TomSync"
+        xmlns:shell="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:exp="clr-namespace:Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation;assembly=Microsoft.WindowsAPICodePack.Shell"
+        Title="TomSync"
+        Style="{StaticResource CustomWindowChrome}" 
+        Icon="Resources/icon.png"
+        >
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5,2,5,2">
+            <TextBlock Text="Вы вошли как"/>
+            <TextBlock Name="UserServer_TextBlock" Margin="5,0,0,0"/>
+            <TextBlock Text=". "/>
+            <TextBlock Margin="5,0,0,0">
+                <Hyperlink Name="Logout_Hyperink" Click="Logout_Hyperink_Click">Выход.</Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <TabControl HorizontalAlignment="Stretch" Grid.Row ="1" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="Задачи" >
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Button
+                            Style="{StaticResource CustomButton}"
+                            Click="CreateTask_Button_Click"
+                            Content="Создать задачу"
+                            />
+                        <Button
+                            Style="{StaticResource CustomButton}"
+                            Click="DeleteTask_Button_Click"
+                            Content="Удалить задачу"
+                            />
+                        <Button
+                            Style="{StaticResource CustomButton}"
+                            Click="ChangeTask_Button_Click"
+                            Content="Изменить задачу"
+                            />
+                    </StackPanel>
+                    <Button Grid.Row="0" 
+                            Style="{StaticResource CustomButton}"
+                            HorizontalAlignment="Right"
+                            Name="Sync_Button"
+                            Click="Folder_Button_Click"
+                            Content="Выполнить задачи"
+                            />
+                    <ListView Grid.Row="1" SelectionMode="Multiple" Name="Tasks_ListView">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Локальный путь" DisplayMemberBinding="{Binding Path=PathsString}"/>
+                                    <GridViewColumn Header="Папка на сервере" DisplayMemberBinding="{Binding Path=ServerDirName}" Width="auto"/>
+                                    <GridViewColumn Header="Дата создания задачи" DisplayMemberBinding="{Binding Path=CreateDate, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}"  Width="auto"/>
+                                    <GridViewColumn Header="Дата последней синхронизации" DisplayMemberBinding="{Binding Path=LastSyncDate, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}"  Width="auto"/>
+                                    <GridViewColumn Header="Макс. количество копий" DisplayMemberBinding="{Binding Path=BackupCount}"  Width="auto"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Файлы в облаке" Name="Cloud_TabItem" Selector.Selected="Cloud_TabItem_Selected">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="253*"/>
+                        <ColumnDefinition Width="493*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Name="DirNameTextBlock" Text="DirName" Grid.Row="0" Grid.ColumnSpan="2" />
+                    <ListView Name="ServerItemList" 
+                              SelectionMode="Multiple" 
+                              Grid.Row="1" 
+                              ItemContainerStyle="{StaticResource ItemStyle}" Grid.ColumnSpan="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Path=Name}"/>
+                                    <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding Path=Size}" Width="auto"/>
+                                    <GridViewColumn Header="Изменен" DisplayMemberBinding="{Binding Path=LastModified, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}"  Width="auto"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2">
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="OpenButton" 
+                                Click="OpenButton_Click"
+                                Content="Открыть"
+                                />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="BackButton" 
+                                Click="BackButton_Click"
+                                Content="Назад"
+                                />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="UploadFileButton" 
+                                Click="UploadFileButton_Click"
+                                Content="Загрузить файл"
+                                />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="UploadDirButton" 
+                                Click="UploadDirButton_Click"
+                                Content="Загрузить папку"
+                                />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="DownloadButton" 
+                                Click="DownloadButton_Click"
+                                Content="Скачать"
+                                />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="DeleteButton" 
+                                Click="DeleteButton_Click"
+                                Content="Удалить"
+                                />
+                        <!--<Button 
+                        Style="{StaticResource CustomButton}"
+                        Name="RenameButton" 
+                        Click="RenameButton_Click"
+                        Content="Переименовать в New Name"
+                    />
+                    <Button 
+                        Style="{StaticResource CustomButton}"
+                        Name="MoveButton" 
+                        Click="MoveButton_Click"
+                        Content="Перенести в Sync"
+                    />-->
+                    </StackPanel>
+                </Grid >
+            </TabItem>
+            <TabItem Header="История" Name="History_TabItem" Selector.Selected="History_TabItem_Selected">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="200" />
+                        <RowDefinition MinHeight="100" Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListView Grid.Row="0" Name="Logs_ListView" >
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Время" DisplayMemberBinding="{Binding Path=DateTime, StringFormat={}{0:dd.MM.yyyy HH:mm:ss}}" />
+                                    <GridViewColumn Header="Уровень" DisplayMemberBinding="{Binding Path=Level}" />
+                                    <GridViewColumn Header="Логгер" DisplayMemberBinding="{Binding Path=Logger}" />
+                                    <GridViewColumn Header="Сообщение" DisplayMemberBinding="{Binding Path=Message}" />
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ListBox Grid.Row="1" 
+                             Name="LogFiles_ListBox"
+                             SelectionMode="Single" 
+                             SelectionChanged="LogFiles_ListBox_SelectionChanged"
+                             />
+                </Grid >
+            </TabItem>
+            <TabItem Header="Настройки" Name="Settings_TabItem" Selector.Selected="Settings_TabItem_Selected">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5,2,5,2">
+                        <TextBlock Text="Путь хранения логов:" VerticalAlignment="Center"/>
+                        <TextBlock Name="LogPath_TextBlock" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,2,5,2">
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="ClearLogs_Button" 
+                                Click="ClearLogs_Button_Click"
+                                Content="Очистить логи" />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="ChangeLogPath_Button" 
+                                Click="ChangeLogPath_Button_Click"
+                                Content="Изменить путь" />
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="DefaultLogPath_Button" 
+                                Click="DefaultLogPath_Button_Click"
+                                Content="Путь по умолчанию"
+                                Width="120"/>
+                    </StackPanel>
+                    <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5,2,5,2">
+                        <TextBlock Text="Путь сохранения файлов по умолчанию:" VerticalAlignment="Center"/>
+                        <TextBlock Name="SavePath_TextBlock" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="5,2,5,2">
+                        <Button Style="{StaticResource CustomButton}"
+                                Name="EditSavePath_Button" 
+                                Click="ClearLogs_Button_Click"
+                                Content="Изменить" />
+                    </StackPanel>-->
+                    <StackPanel Grid.Row="2" Margin="0,5,0,0">
+                        <TextBlock>Ограничение скорости:</TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <GroupBox  Header="Скорость скачивания с сервера">
+                                <StackPanel Name="Download_Box" Margin="5">
+                                    <RadioButton GroupName="Download" Name="FalseD" IsChecked="True" Margin="0,0,0,5">Без ограничений</RadioButton>
+                                    <RadioButton GroupName="Download" Name="TrueD" Margin="0,0,5,0" VerticalAlignment="Center">Ограничить до</RadioButton>
+                                    <StackPanel Orientation="Horizontal">
+                                        <controls:IntegerUpDown Name="Download_UpDown" Minimum="1" Width="80"></controls:IntegerUpDown>
+                                        <TextBlock VerticalAlignment="Center">Кбайт/с</TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="Скорость загрузки на сервер">
+                                <StackPanel Name="Upload_Box" Margin="5">
+                                    <RadioButton GroupName="Upload" Name="FalseU" IsChecked="True" Margin="0,0,0,5">Без ограничений</RadioButton>
+                                    <RadioButton GroupName="Upload" Name="TrueU" Margin="0,0,5,0" VerticalAlignment="Center">Ограничить до</RadioButton>
+                                    <StackPanel Orientation="Horizontal">
+                                        <controls:IntegerUpDown Name="Upload_UpDown" Minimum="1" Width="80"></controls:IntegerUpDown>
+                                        <TextBlock VerticalAlignment="Center">Кбайт/с</TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                        <Button Content="Применить" 
+                                Style="{StaticResource CustomButton}" 
+                                HorizontalAlignment="Left"
+                                Margin="5"
+                                Name="SpeedLimit_Button"
+                                Click="SpeedLimit_Button_Click"/>
+                    </StackPanel>
+                </Grid >
+            </TabItem>
+            <TabItem Header="Справка">
+                <DocumentViewer x:Name="docViewer"/>
+                
+            </TabItem>
+        </TabControl>
+        <StackPanel Grid.Row="2"  Margin="5,2">
+            <TextBlock Name="Quota_TextBox"
+                       Margin="0,2"
+                       />
+            <StackPanel Orientation="Horizontal">
+                <ProgressBar Name="ProgressBar" Width="100"/>
+                <TextBlock Name="ProgressTextBlock"
+                       Margin="5,0"
+                       />
+                <TextBlock Name="ResultTextBlock" Text=""
+                       Margin="5,0"
+                       />
+                <TextBlock Name="MessageTextBlock" Text=""
+                       Margin="5,0"
+                       />
+                <Button Name="CloseStream_Button"
+                        Click="CloseStream_Button_Click"
+                        Content="Отмена"
+                        IsEnabled="False"
+                        Visibility="Hidden"
+                        Margin="5,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
+
