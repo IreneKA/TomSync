@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <!--Секция DirectoryRef ссылается на описанную ранее папку c идентификатором INSTALLLOCATION.-->
+    <!--Атрибут FileSource содержит путь, по которому необходимо искать все файлы, добавляемые в инсталлятор.-->
+    <DirectoryRef Id="INSTALLLOCATION" 
+                  FileSource="..\..\TomSync\TomSync\bin\Debug\">
+      <!--Секция Component включает описание устанавливаемых файлов.-->
+      <Component Id ="ProductComponents"
+                 DiskId="1"
+                 Guid="{EAD006B3-2BF6-40E6-943C-1B772376DD7B}">
+        <!--Атрибут Name указывает, что файл нужно искать по заданному имени в директории FileSource.-->
+        <File Id="TomSync.exe" Name="TomSync.exe"/>
+        <File Id="NLog.config" Name="NLog.config"/>
+        <File Id="help.xps" Name="help.xps"/>
+        <RegistryKey Root="HKLM"
+                     Key="Software\Microsoft\Windows\CurrentVersion\Run">
+          <RegistryValue Type="string" Name="TomSync" Value="[INSTALLFOLDER]TomSync.exe"/>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+	</Fragment>
+</Wix>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcuts" Guid="{DFA97C7E-E565-44D2-8D1E-7AB1E52ADB01}">
+        <!--Первая секция создает ярлык для нашего приложения с указанием в качестве рабочей директории папки установки.-->
+        <Shortcut Id="StartShortcut"
+                  Name="TomSync"
+                  Description="Start TomSync"
+                  Target="[INSTALLLOCATION]TomSync.exe"
+                  WorkingDirectory="INSTALLLOCATION"/>
+        <!--Вторая секция Shortcut создает ярлык для деинсталляции нашего приложения. Для этого используется программа msiexec с ключом /x.-->
+        <Shortcut Id="UninstallTomSync"
+                  Name="Uninstall TomSync"
+                  Description="Uninstall TomSync"
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+
+        <!--Секция RemoveFolder говорит о том, что при деинсталляции необходимо удалить папку с ярлыками из меню пуск.-->
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <!--Оставшаяся секция RegistyValue необходима для того, чтобы удаление заработало.-->
+        <RegistryValue Root="HKCU"
+            Key="Software\FCTom\TomSync"
+            Name="installed"
+            Type="integer"
+            Value="1"
+            KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+  
+  <Fragment>
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcutTomSync" Guid="{B4908FF0-96C6-4f12-8E64-BC366E1147E1}">
+        <RegistryValue Root="HKCU" Key="Software\FCTom\TomSync"
+                       Name="desktopShortcut" Type="integer" Value="1" KeyPath="yes"/>
+        <Shortcut Id="DesktopShortcut"
+                  Name="TomSync"
+                  Target="[INSTALLLOCATION]TomSync.exe"
+                  WorkingDirectory="INSTALLLOCATION"/>
+        <!--<Condition>SHORTCUT_DESKTOP</Condition>-->
+      </Component>
+    </DirectoryRef>
+	</Fragment>
+</Wix>

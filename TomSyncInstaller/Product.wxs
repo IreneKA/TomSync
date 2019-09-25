@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" 
+           Name="TomSync" 
+           Language="1049" 
+           Version="1.0.0.0" 
+           Manufacturer="FCTom" 
+           UpgradeCode="4eb64433-5a0a-4d14-b357-0b0f52af29f0">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		
+		<!--<MediaTemplate />-->
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+
+    <!--описание директорий, куда будем инсталлировать наше приложение.-->
+    <!--Тэг Directory определяет путь для установки.-->
+    <!--Directory Id=”TARGETDIR” – корневой элемент для всех папок, в которые будет инсталлироваться наше приложение.-->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <!--Directory Id=”ProgramFilesFolder» указывает на папку Program Files.-->
+      <Directory Id="ProgramFilesFolder">
+        <!--Directory Id=”INSTALLLOCATION” – это папка с именем TomSync в папке Program Files.-->
+        <Directory Id="INSTALLLOCATION" Name="TomSync" />
+      </Directory>
+ 
+      <!--Второе описание иерархии папок указывает расположение ярлыков к нашему приложению.-->
+      <!--Id=”ProgramMenuFolder” ссылается на папку меню Пуск.-->
+      <Directory Id="ProgramMenuFolder">
+        <!--В меню пуск будет создана папка ApplicationServer.-->
+        <Directory Id="ApplicationProgramsFolder" Name="TomSync" />
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+    </Directory>
+    
+		<Feature Id="ProductFeature" Title="TomSync" Level="1">
+			<!--<ComponentGroupRef Id="ProductComponents" />-->
+      <ComponentRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcuts"/>
+      <ComponentRef Id="DesktopShortcutTomSync"/>
+		</Feature>
+    
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" ></Property>
+    <WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/>
+    
+
+    <UI>
+      <!--<UIRef Id="WixUI_Minimal" />-->
+      <UIRef Id="WixUI_InstallDir"/>
+      <Publish Dialog="ExitDialog"
+          Control="Finish"
+          Event="DoAction"
+          Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+    </UI>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Запустить TomSync" />
+
+    <Property Id="WixShellExecTarget" Value="[#TomSync.exe]" />
+    <CustomAction Id="LaunchApplication"
+        BinaryKey="WixCA"
+        DllEntry="WixShellExec"
+        Impersonate="yes" />
+	</Product>
+</Wix>
